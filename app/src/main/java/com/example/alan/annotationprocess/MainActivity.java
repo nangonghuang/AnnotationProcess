@@ -8,7 +8,7 @@ import com.example.annotation.AnnotationFIELD;
 
 public class MainActivity extends AppCompatActivity {
 
-    @AnnotationFIELD(3)
+    @AnnotationFIELD(R.id.text)
     private TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

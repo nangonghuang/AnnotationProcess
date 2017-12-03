@@ -5,6 +5,8 @@ import com.google.auto.service.AutoService;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -22,8 +24,6 @@ import javax.tools.JavaFileObject;
  * Created by alan on 2017/12/2.
  */
 @AutoService(Processor.class)
-@SupportedAnnotationTypes("com.example.annotation.AnnotationFIELD")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class MyProcessor extends AbstractProcessor {
     static final String CLASS_NAME = "GeneratedClass";
     final String PACKAGENAME = this.getClass().getPackage().getName();
@@ -43,7 +43,6 @@ public class MyProcessor extends AbstractProcessor {
         for (Element element : roundEnvironment.getElementsAnnotatedWith(AnnotationFIELD.class)) {
             String objectType = element.getSimpleName().toString();
             printMessageInGradleConsole("====objectType :==== " + objectType);
-            // this is appending to the return statement
             builder.append(objectType).append(" says hello! ");
         }
 
@@ -66,6 +65,17 @@ public class MyProcessor extends AbstractProcessor {
         return true;
     }
 
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        Set<String> annotations = new LinkedHashSet<>();
+        annotations.add(AnnotationFIELD.class.getCanonicalName());
+
+        return annotations;
+    }
+
+    @Override public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
 
     void printMessageInGradleConsole(String str){
         processingEnv.getMessager().printMessage(Diagnostic.Kind.MANDATORY_WARNING,str);
